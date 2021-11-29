@@ -11,7 +11,8 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET'])
 def test(request):
-    get_random_ten_question()
+    # get_random_ten_question()
+    validate_answer(1,'Affrica')
     return HttpResponse("test run")
 
 class QuestionModelViewSet(ModelViewSet):
