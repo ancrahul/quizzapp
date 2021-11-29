@@ -15,17 +15,17 @@ from django.db import models
 #     def __str__(self):
 #         return self.question
 
-class QuizzHistroy(models.Model):
-    # user1,user1 score,user2,user2 score,winner,looser,created at,started at,completed at.
-    user1 = models.ForeignKey()
-    user1_score = models.IntegerField()
-    user2 = models.ForeignKey()
-    user2_score = models.IntegerField()
-    winner = models.CharField(max_length=200,null=True)
-    looser = models.CharField(max_length=200,null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    started_at = models.DateTimeField(auto_now=True,null = True)
-    completed_at = models.DateTimeField(auto_now=True,null = True)
+# class QuizzHistroy(models.Model):
+#     # user1,user1 score,user2,user2 score,winner,looser,created at,started at,completed at.
+#     user1 = models.ForeignKey()
+#     user1_score = models.IntegerField()
+#     user2 = models.ForeignKey()
+#     user2_score = models.IntegerField()
+#     winner = models.CharField(max_length=200,null=True)
+#     looser = models.CharField(max_length=200,null=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     started_at = models.DateTimeField(auto_now=True,null = True)
+#     completed_at = models.DateTimeField(auto_now=True,null = True)
 
 
 class QuestionModel(models.Model):

@@ -1,9 +1,12 @@
+from .models import  *
+import random
+
 def get_random_ten_question():
-    # from the question model get 10 ques with same sub category
-    # get all question having sunbcategory similar from question models using filter. o/p: queryset
-    # select random 10 objs from the above queryset
-    # get id of all questions randomly selected in a list
-    pass
+    same_subcategory_ids_queryset = QuestionModel.objects.filter(sub_category = 'Geolocation').values_list('id',flat=True)
+    random_id_list = random.sample(list(same_subcategory_ids_queryset),min(len(same_subcategory_ids_queryset), 5))
+    random_question_queryset = QuestionModel.objects.filter(id__in = random_id_list)
+    
+    
 
 def store_questions():
     pass

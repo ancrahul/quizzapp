@@ -9,6 +9,6 @@ routers=DefaultRouter()
 routers.register("question",QuestionModelViewSet,basename="")
 
 urlpatterns = [
-    path("api/",include(routers.urls))
-    
+    path("api/",include(routers.urls)),
+    path("test/",test)
 ]
