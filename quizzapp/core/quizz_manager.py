@@ -17,5 +17,7 @@ def validate_answer(id,answer):
 def update_score():
     pass
 
-def get_winner():
-    pass
+def get_winner(room_code):
+    winner_list = QuizzHistroy.objects.all().filter(room_code=room_code).values_list('winner',flat = True)
+    winner = winner_list[0]
+    print(winner)
