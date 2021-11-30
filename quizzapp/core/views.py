@@ -15,9 +15,8 @@ class QuestionModelViewSet(ModelViewSet):
 
 
 
-    
 
 
 def home(request):
-    get_questions(2)
-    return HttpResponse("a")
+    question_set=get_random_questions("Indian History",5)
+    return HttpResponse(question_set)
