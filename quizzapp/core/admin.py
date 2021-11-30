@@ -4,3 +4,8 @@ from .models import *
 @admin.register(QuestionModel)
 class QuestionAdmin(admin.ModelAdmin):
     list_display=["img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+
+
+@admin.register(QuestionUpload)
+class QuestionUploadAdmin(admin.ModelAdmin):
+    list_display=['id',"exel_file_upload"]

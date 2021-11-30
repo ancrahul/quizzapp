@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 
 
 class QuestionModel(models.Model):
@@ -14,5 +15,15 @@ class QuestionModel(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class QuestionUpload(models.Model):
+    exel_file_upload = models.FileField(upload_to="question_exel")
+
+
+class QuestionUploadForm(ModelForm):
+    class Meta:
+        model= QuestionUpload
+        fields="__all__"
 
 
