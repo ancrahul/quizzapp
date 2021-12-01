@@ -1,12 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class QuizzHistroy(models.Model):
+
+class QuizzLog(models.Model):
     room_code = models.CharField(max_length=20,null=True)
-    user_and_score = models.JSONField(encoder = None,null=True)
+    user = models.ManyToManyField(User,through='QuizzUserScore')
     winner = models.CharField(max_length=200,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField(auto_now=True,null = True)
     completed_at = models.DateTimeField(auto_now=True,null = True)
+    
+class QuizzUserScore(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    quizzlog = models.ForeignKey(QuizzLog,on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
 
 
 class QuestionModel(models.Model):

@@ -9,11 +9,12 @@ from .serializer import *
 from rest_framework.decorators import api_view
 
 
-@api_view(['GET'])
 def test(request):
     # get_random_ten_question()
     # validate_answer(1,'Affrica')
-    get_winner('210AS')
+    # get_winner('210AS')
+    # update_score()
+    # room_code_generator()
     return HttpResponse("test run")
 
 class QuestionModelViewSet(ModelViewSet):
