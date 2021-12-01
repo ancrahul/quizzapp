@@ -14,7 +14,7 @@ class QuestionModel(models.Model):
     sub_category = models.CharField(max_length=200,null=True)
 
     def __str__(self):
-        return self.question
+        return str(self.question)
 
 
 class QuestionUpload(models.Model):
