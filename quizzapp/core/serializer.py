@@ -1,6 +1,7 @@
 from .models import *
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.hashers import make_password
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,9 +9,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
 
 
+
 class LoginTokenPairSerializer(TokenObtainPairSerializer):
+    ### Inserting Addition of user info into token  ####
     @classmethod
-    def get_token(cls, user):
+    def get_token(cls, user):                                        
         token = super(LoginTokenPairSerializer, cls).get_token(user)
         # Add custom claims
         token['username'] = user.username
@@ -19,8 +22,20 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 
+def checkempty(value):
+    #### Validator function for checking empty fields ######
+    if value=="":
+        raise serializers.ValidationError('This field is required.')
+    
+
 class CustomUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    email=serializers.EmailField(max_length=254,validators=[checkempty])
     class Meta:
         model = CustomUser
         fields=["username","email","password"]
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data['password'])
+        return super(CustomUserSerializer, self).create(validated_data)
+
+    
