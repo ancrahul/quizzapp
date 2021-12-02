@@ -1,6 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+
+class UserScore(models.Model):  
+    user = models.OneToOneField(User,on_delete=models.CASCADE)  
+    score = models.IntegerField(default=0,null=True)
+
+    def __str__(self):  
+          return "%s's profile" % self.user  
+
+    def create_user_score(sender, instance, created, **kwargs):  
+        if created:  
+            profile, created = UserScore.objects.get_or_create(user=instance)  
+
+    post_save.connect(create_user_score, sender=User) 
+
 
 class QuizzLog(models.Model):
     room_code = models.CharField(max_length=20,null=True)

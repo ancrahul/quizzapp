@@ -15,10 +15,11 @@ class QuizzLogAdmin(admin.ModelAdmin):
     list_display = ('room_code','winner')
     inlines = (TermInlineAdmin,)
 
-    # def get_user(self,obj):
-    #     return "\n".join([u.username for u in obj.user.all()])
-
 
 @admin.register(QuizzUserScore)
 class QuizzUserScoreAdmin(admin.ModelAdmin):
     list_display = ['user','quizzlog','score']
+
+@admin.register(UserScore)
+class UserScoreAdmin(admin.ModelAdmin):
+    list_display = ['score']
