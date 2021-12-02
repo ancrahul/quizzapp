@@ -9,3 +9,8 @@ class QuestionAdmin(admin.ModelAdmin):
 @admin.register(QuestionUpload)
 class QuestionUploadAdmin(admin.ModelAdmin):
     list_display=['id',"exel_file_upload"]
+
+
+class CustomUserAdmin(admin.ModelAdmin):
+    model = CustomUser
+admin.site.register(CustomUser, CustomUserAdmin)

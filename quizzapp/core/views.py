@@ -13,6 +13,14 @@ from sqlalchemy import create_engine
 from .serializer import *
 from .custom_pagination import QuestionListPagination
 
+from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
+
+
+class CustomUserViewSet(ModelViewSet):
+    queryset= CustomUser.objects.all()
+    serializer_class= CustomUserSerializer
+
 
 class QuestionModelViewSet(ModelViewSet):
     queryset= QuestionModel.objects.all()
@@ -20,6 +28,12 @@ class QuestionModelViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category', 'sub_category']
     pagination_class= QuestionListPagination
+
+
+class LoginTokenObtainPairView(TokenObtainPairView):
+    permission_classes=(AllowAny,)
+    serializer_class= LoginTokenPairSerializer
+    
 
 
 

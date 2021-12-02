@@ -1,6 +1,12 @@
 from django.db import models
 from django.forms import ModelForm
 
+from django.contrib.auth.models import AbstractUser
+
+
+class CustomUser(AbstractUser):
+    total_score = models.IntegerField(null=True,default=0)
+    
 
 class QuestionModel(models.Model):
     img_question = models.ImageField(upload_to="questions", blank=True, null=True)
