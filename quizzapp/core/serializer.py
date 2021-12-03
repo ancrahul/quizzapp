@@ -6,7 +6,20 @@ from django.contrib.auth.hashers import make_password
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
-        fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+        fields="__all__"
+        # fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+
+
+
+class RawQuestionCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=QuestionModel
+        fields=["category"]
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['category'] = instance['category']
+    #     return representation 
+ 
 
 
 
@@ -23,7 +36,6 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 def checkempty(value):
-    #### Validator function for checking empty fields ######
     if value=="":
         raise serializers.ValidationError('This field is required.')
     

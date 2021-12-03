@@ -12,6 +12,7 @@ def get_random_questions(subcategory,numbers=10):
 
 
 def save_exel_to_question_model(question_upload_object):
+    print(f"{settings.BASE_DIR}/{question_upload_object.exel_file_upload}")
     df = pd.read_excel(f"{settings.BASE_DIR}/{question_upload_object.exel_file_upload}",index_col=0)
     ####### using loop saving one object at a time #########
     for index, row in df.iterrows():
