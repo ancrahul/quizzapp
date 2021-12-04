@@ -1,7 +1,5 @@
 from .models import *
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth.hashers import make_password
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,14 +9,14 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 
- 
+
 
 
 
 class LoginTokenPairSerializer(TokenObtainPairSerializer):
     ### Inserting Addition of user info into token  ####
     @classmethod
-    def get_token(cls, user):                                        
+    def get_token(cls, user):
         token = super(LoginTokenPairSerializer, cls).get_token(user)
         # Add custom claims
         token['username'] = user.username
@@ -27,10 +25,10 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 
-def checkempty(value):  ####validator#######          
+def checkempty(value):  ####validator#######
     if value=="":
         raise serializers.ValidationError('This field is required.')
-    
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=254,validators=[checkempty])
@@ -42,7 +40,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         validated_data['password'] = make_password(validated_data['password'])
         return super(CustomUserSerializer, self).create(validated_data)
 
-    
+
 
 
 class QuestionCategorySerializer(serializers.Serializer):
@@ -50,3 +48,10 @@ class QuestionCategorySerializer(serializers.Serializer):
 
 class QuestionSubCategorySerializer(serializers.Serializer):
     sub_category = serializers.CharField()
+        fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+
+
+class JoinOrCreateGameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizzLog
+        fields = ["id","room_code","user","sub_category","winner","active_flag","created_at","started_at","completed_at"]

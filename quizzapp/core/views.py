@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.http.response import HttpResponse,JsonResponse
+from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from .models import *
 from rest_framework import filters
@@ -53,6 +54,11 @@ class CustomUserCreate(APIView):
 #######################################
 ###Question
 #######################################
+from rest_framework.decorators import api_view
+import datetime
+import json
+from django.core.serializers import serialize
+
 
 class QuestionModelViewSet(ModelViewSet):
     queryset= QuestionModel.objects.all()
@@ -61,7 +67,7 @@ class QuestionModelViewSet(ModelViewSet):
     filterset_fields = ['category', 'sub_category']
     pagination_class= QuestionListPagination
 
-    @action(detail=False, methods=['GET'], name='Get_category') 
+    @action(detail=False, methods=['GET'], name='Get_category')
     def category(self,request,pk=None):
         obj=QuestionModel.objects.values("category").distinct()
         obj_ser=QuestionCategorySerializer(obj,many=True)
@@ -111,6 +117,36 @@ class QuestionUploadView(APIView):
 class LoginTokenObtainPairView(TokenObtainPairView):
     permission_classes=(AllowAny,)
     serializer_class= LoginTokenPairSerializer
-    
 
+
+
+
+
+@api_view(['GET'])
+def get_live_quizz_api(request):
+    ser = json.loads(serialize('json',get_live_quizz()))
+    return Response(ser)
+
+@api_view(['POST'])
+def create_quizz_api(request):
+    data = request.data
+    sub_category = data["sub_category"]
+    create_quizz(request,sub_category)
+    return Response({'success':'success'})
+
+@api_view(['GET','POST'])
+def join_quizz_api(request):
+    if request.method == 'GET':
+        # obj = QuizzLog.objects.all().filter(active_flag = True)
+        # serobj = JoinOrCreateGameSerializer(obj)
+        # print(serobj)
+        # return Response(serobj.data)
+        ser = json.loads(serialize('json',get_live_quizz()))
+        return Response(ser)
+
+    if request.method == 'POST':
+        data = request.data
+        room_code = data['room_code']
+        join_quizz(request,room_code)
+        return Response({'success':'success'})
 

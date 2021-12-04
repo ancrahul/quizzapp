@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# exception file
+quizzapp/settings.py
+
+
+
 # Distribution / packaging
 .Python
 build/

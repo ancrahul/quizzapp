@@ -14,3 +14,22 @@ class QuestionUploadAdmin(admin.ModelAdmin):
 class CustomUserAdmin(admin.ModelAdmin):
     model = CustomUser
 admin.site.register(CustomUser, CustomUserAdmin)
+
+
+class TermInlineAdmin(admin.TabularInline):
+    model = QuizzLog.user.through
+
+
+@admin.register(QuizzLog)
+class QuizzLogAdmin(admin.ModelAdmin):
+    list_display = ('room_code','winner')
+    inlines = (TermInlineAdmin,)
+
+
+@admin.register(UserQuizzScore)
+class QuizzUserScoreAdmin(admin.ModelAdmin):
+    list_display = ['user','quizzlog','score']
+
+@admin.register(UserTotalScore)
+class UserScoreAdmin(admin.ModelAdmin):
+    list_display = ['score']
