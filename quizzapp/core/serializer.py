@@ -11,14 +11,6 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 
-class RawQuestionCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model=QuestionModel
-        fields=["category"]
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['category'] = instance['category']
-    #     return representation 
  
 
 
@@ -35,7 +27,7 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 
-def checkempty(value):
+def checkempty(value):  ####validator#######          
     if value=="":
         raise serializers.ValidationError('This field is required.')
     
@@ -51,3 +43,10 @@ class CustomUserSerializer(serializers.ModelSerializer):
         return super(CustomUserSerializer, self).create(validated_data)
 
     
+
+
+class QuestionCategorySerializer(serializers.Serializer):
+    category = serializers.CharField()
+
+class QuestionSubCategorySerializer(serializers.Serializer):
+    sub_category = serializers.CharField()

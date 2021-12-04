@@ -6,16 +6,17 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 
 routers=DefaultRouter()
 routers.register("question",QuestionModelViewSet,basename="question")
-routers.register("category",QuestionCategoryViewSet,basename="category")
-routers.register("registration",CustomUserViewSet,basename="registration")
+routers.register("user",CustomUserViewSet,basename="user")
 
 urlpatterns = [
     path("",home),
     path("api/",include(routers.urls)),
-    path("qupload/",QuestionUploadView.as_view()),
-    path('login/',LoginTokenObtainPairView.as_view(),name='login'),
-    path('refreshtoken/',TokenRefreshView.as_view()),
-    path('verifytoken/',TokenVerifyView.as_view()) 
+    path("api/qupload/",QuestionUploadView.as_view(),name='question_upload'),
+    path("api/question/category/<slug:catname>/subcategory",QuestionSubCategoryView.as_view(),name='question_category'),
+    path('api/login/',LoginTokenObtainPairView.as_view(),name='login'),
+    path('api/registration/',CustomUserCreate.as_view(),name='registration'),
+    path('api/refreshtoken/',TokenRefreshView.as_view()),
+    path('api/verifytoken/',TokenVerifyView.as_view()) 
 ]
 
 

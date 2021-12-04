@@ -13,9 +13,9 @@ from sqlalchemy import create_engine
 from .serializer import *
 from .custom_pagination import QuestionListPagination
 from rest_framework.parsers import *
-
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import *
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
+from rest_framework.decorators import action
 
 
 
@@ -27,20 +27,32 @@ def home(request):
     # return HttpResponse(question_set)
 
 #######################################
-
+###User
+#######################################
 
 class CustomUserViewSet(ModelViewSet):
+    permission_classes =(IsAdminUser,)
     queryset= CustomUser.objects.all()
     serializer_class= CustomUserSerializer
 
 
-class QuestionCategoryViewSet(ModelViewSet):
-    queryset= QuestionModel.objects.values("category").distinct()
-    serializer_class= RawQuestionCategorySerializer
-    # filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['category', 'sub_category']
-    # pagination_class= QuestionListPagination
 
+class CustomUserCreate(APIView):
+    permission_classes = (AllowAny,)
+    def post(self, request, format='json'):
+        serializer = CustomUserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                json = serializer.data
+                return Response(json)
+        return Response(serializer.errors)
+
+
+
+#######################################
+###Question
+#######################################
 
 class QuestionModelViewSet(ModelViewSet):
     queryset= QuestionModel.objects.all()
@@ -49,21 +61,30 @@ class QuestionModelViewSet(ModelViewSet):
     filterset_fields = ['category', 'sub_category']
     pagination_class= QuestionListPagination
 
-    # def destroy(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     self.perform_destroy(instance)
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-class LoginTokenObtainPairView(TokenObtainPairView):
-    permission_classes=(AllowAny,)
-    serializer_class= LoginTokenPairSerializer
-    
+    @action(detail=False, methods=['GET'], name='Get_category') 
+    def category(self,request,pk=None):
+        obj=QuestionModel.objects.values("category").distinct()
+        obj_ser=QuestionCategorySerializer(obj,many=True)
+        catlist={"category":[ i['category'] for i in obj_ser.data]}
+        return Response(catlist)
 
 
 
 
+class QuestionCategoryView(APIView):
+    def get(self,request):
+        category_obj=QuestionModel.objects.values("category").distinct()
+        category_obj_ser=Qcatserializer(category_obj,many=True)
+        catlist={"category":[ i['category'] for i in category_obj_ser.data]}
+        return Response(catlist)
+
+
+class QuestionSubCategoryView(APIView):
+    def get(self,request,catname=None):
+        obj=QuestionModel.objects.filter(category=self.kwargs['catname']).values("sub_category").distinct()
+        obj_ser=QuestionSubCategorySerializer(obj,many=True)
+        subcatlist={"sub_category":[ i['sub_category'] for i in obj_ser.data]}
+        return Response(subcatlist)
 
 
 
@@ -73,13 +94,23 @@ class QuestionUploadView(APIView):
         question_objects=QuestionModel.objects.all()
         serialized_question=QuestionSerializer(question_objects,many=True)
         df=pd.DataFrame(serialized_question.data)
-        # print(df)
         df.to_excel(f"question_exel/{uuid.uuid4}.xls",encoding="UTF-8", engine='openpyxl', index=False)
         return Response("{data: true}")
 
     def post(self,request):
-        file_obj = request.data
-        print(file_obj)
         question_upload_object= QuestionUpload.objects.create(exel_file_upload=request.FILES['exel_file_upload'])
         resp=save_exel_to_question_model(question_upload_object)
         return Response(resp)
+
+
+
+#######################################
+###Accounts
+#######################################
+
+class LoginTokenObtainPairView(TokenObtainPairView):
+    permission_classes=(AllowAny,)
+    serializer_class= LoginTokenPairSerializer
+    
+
+
