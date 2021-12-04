@@ -1,4 +1,5 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse,JsonResponse
+from rest_framework.response import Response 
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView 
@@ -9,27 +10,9 @@ from .quizz_manager import *
 from .serializer import *
 from rest_framework.decorators import api_view
 import datetime
+import json
+from django.core.serializers import serialize
 
-
-def test(request):
-    # get_random_ten_question()
-    # validate_answer(1,'Affrica')
-    # get_winner('210AS')
-    # update_score()
-    # room = room_code_generator()
-    # print(room)
-    subcategory = get_distinct_subcategory()
-    online_game = User.objects.values_list('username',flat=True)
-    context = {
-        "online_game" : online_game,
-        "subcategory" : subcategory,
-    }
-    return render(request,"base.html",context) 
-
-def test2(request):
-    # create_quizz(request,sub_category = 'history')
-    join_quizz(request)
-    return HttpResponse('done')
 
 class QuestionModelViewSet(ModelViewSet):
     queryset= QuestionModel.objects.all()
@@ -37,11 +20,31 @@ class QuestionModelViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category', 'sub_category']
 
-# class QuizzJoinAndCreate(APIView):
-#     serializer_class = JoinSerializer
+@api_view(['GET'])
+def get_live_quizz_api(request):
+    ser = json.loads(serialize('json',get_live_quizz()))
+    return Response(ser)
 
-#     def get(self):
-#         join_object = Join.objects.all()
+@api_view(['POST'])
+def create_quizz_api(request):
+    data = request.data
+    sub_category = data["sub_category"]
+    create_quizz(request,sub_category)
+    return Response({'success':'success'})
 
+@api_view(['GET','POST'])
+def join_quizz_api(request):
+    if request.method == 'GET':
+        # obj = QuizzLog.objects.all().filter(active_flag = True)
+        # serobj = JoinOrCreateGameSerializer(obj)
+        # print(serobj)
+        # return Response(serobj.data)
+        ser = json.loads(serialize('json',get_live_quizz()))
+        return Response(ser)
 
-    # def post(self, request, *args, **kwargs):
+    if request.method == 'POST':
+        data = request.data
+        room_code = data['room_code']
+        join_quizz(request,room_code)
+        return Response({'success':'success'})
+

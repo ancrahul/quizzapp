@@ -7,5 +7,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
 
 
-class JoinSerializer(serializers.ModelSerializer):
-    pass
+class JoinOrCreateGameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizzLog
+        fields = ["id","room_code","user","sub_category","winner","active_flag","created_at","started_at","completed_at"]

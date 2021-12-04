@@ -54,12 +54,18 @@ def create_quizz(request,sub_category):
     instance.user.add(quiz_creator)
     instance.save()
 
-def join_quizz(request):
+
+
+def get_live_quizz():
+    live_quizz = QuizzLog.objects.all().filter(active_flag = True)
+    return live_quizz
+
+def join_quizz(request,room_code):
     # 2nd user, started time, room code to join, active_flag=of
+    # get_live_quizz()
     quiz_joiner = request.user.id
-    room_code = QuizzLog.objects.all().values_list('room_code',flat=True)
     join_time = timezone.now() 
-    instance = QuizzLog.objects.get(room_code=room_code[0])
+    instance = QuizzLog.objects.get(room_code=room_code)
     instance.user.add(quiz_joiner)
     instance.started_at = join_time
     instance.active_flag = False
