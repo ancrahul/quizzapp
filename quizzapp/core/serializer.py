@@ -5,3 +5,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
         fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+
+
+class JoinSerializer(serializers.ModelSerializer):
+    pass

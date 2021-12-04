@@ -2,6 +2,9 @@ from .models import  *
 import random
 import secrets
 import string
+import datetime
+from django.utils import timezone
+
 
 
 def room_code_generator(charstring=string.ascii_lowercase+string.digits):
@@ -21,11 +24,14 @@ def validate_answer(id,answer):
     else:
         print('False')
 
-def update_score():
+def update_total_score():
     # current score will be zero 
     # if user give right answer score will be +10
     # if user give wrong answer score will be -10
     # if user give no answer score will not change
+    pass
+
+def update_current_game_score():
     current_score = 0
     if validate_answer == True:
         current_score = current_score + 10
@@ -35,8 +41,32 @@ def update_score():
     update.user_and_score['user1'] = 50
     update.save()
 
-
 def get_winner(room_code):
     winner_list = QuizzLog.objects.filter(room_code=room_code).values_list('winner',flat = True)
     winner = winner_list[0]
     print(winner)
+
+def create_quizz(request,sub_category):
+    quiz_creator = request.user.id
+    room_code = room_code_generator()
+    QuizzLog.objects.create(room_code=room_code,sub_category=sub_category)
+    instance = QuizzLog.objects.get(room_code=room_code)
+    instance.user.add(quiz_creator)
+    instance.save()
+
+def join_quizz(request):
+    # 2nd user, started time, room code to join, active_flag=of
+    quiz_joiner = request.user.id
+    room_code = QuizzLog.objects.all().values_list('room_code',flat=True)
+    join_time = timezone.now() 
+    instance = QuizzLog.objects.get(room_code=room_code[0])
+    instance.user.add(quiz_joiner)
+    instance.started_at = join_time
+    instance.active_flag = False
+    instance.save()
+# ------------------------------------------------------------------------------------------------------
+
+def get_distinct_subcategory():
+    distinct_subcategory = QuestionModel.objects.all().values_list('sub_category',flat=True).distinct()
+    return distinct_subcategory
+

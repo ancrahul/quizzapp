@@ -16,10 +16,10 @@ class QuizzLogAdmin(admin.ModelAdmin):
     inlines = (TermInlineAdmin,)
 
 
-@admin.register(QuizzUserScore)
+@admin.register(UserQuizzScore)
 class QuizzUserScoreAdmin(admin.ModelAdmin):
     list_display = ['user','quizzlog','score']
 
-@admin.register(UserScore)
+@admin.register(UserTotalScore)
 class UserScoreAdmin(admin.ModelAdmin):
     list_display = ['score']
