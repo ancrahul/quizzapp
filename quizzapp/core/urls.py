@@ -17,6 +17,7 @@ urlpatterns = [
     path("api/question/category/<slug:catname>/subcategory",QuestionSubCategoryView.as_view(),name='question_category'),
     path('api/login/',LoginTokenObtainPairView.as_view(),name='login'),
     path('api/registration/',CustomUserCreate.as_view(),name='registration'),
+    path('api/createquizz',QuizzLogCreateView().as_view()),
     path('api/refreshtoken/',TokenRefreshView.as_view()),
     path('api/verifytoken/',TokenVerifyView.as_view()),
 

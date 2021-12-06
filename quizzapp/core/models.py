@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.forms import ModelForm
 from django.db.models.signals import post_save
+from .quizz_manager import room_code_generator
 
 
 class CustomUser(AbstractUser):
@@ -17,6 +18,10 @@ class QuizzLog(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField(null = True)
     completed_at = models.DateTimeField(auto_now=True,null = True)
+
+    def save(self, *args, **kwargs):
+        self.room_code = room_code_generator()
+        super(QuizzLog, self).save(*args, **kwargs)
 
 
 class UserQuizzScore(models.Model):

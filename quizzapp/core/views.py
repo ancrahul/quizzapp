@@ -131,20 +131,35 @@ def get_live_quizz_api(request):
 
 @api_view(['POST'])
 def create_quizz_api(request):
-    data = request.data
-    sub_category = data["sub_category"]
-    create_quizz(request,sub_category)
-    return Response({'success':'success'})
+    ser_data = QuizzLogSerializer(data=request.data)
+    print(request.user)
+
+
+    # print(type(ser_data))
+    # print((ser_data))
+    if ser_data.is_valid():
+        ser_data.user.add(request.user.id)
+        ser_data.save()
+        
+        return Response({'msg': 'Game room created'})
+    return Response(ser_data.errors)
+
+    # sub_category = data["sub_category"]
+    # create_quizz(request,sub_category)
+    # return Response({'success':'success'})
 
 @api_view(['GET','POST'])
 def join_quizz_api(request):
     if request.method == 'GET':
-        # obj = QuizzLog.objects.all().filter(active_flag = True)
-        # serobj = JoinOrCreateGameSerializer(obj)
-        # print(serobj)
-        # return Response(serobj.data)
-        ser = json.loads(serialize('json',get_live_quizz()))
-        return Response(ser)
+        obj = QuizzLog.objects.all().filter(active_flag = True)
+        print(obj.values())
+        serobj = QuizzLogSerializer(obj)
+        print(serobj)
+        return Response(serobj.data)
+        # ser = json.loads(serialize('json',get_live_quizz()))
+        # return Response(ser)
+        # return Response(obj)
+        return Response("suceess")
 
     if request.method == 'POST':
         data = request.data
@@ -152,3 +167,20 @@ def join_quizz_api(request):
         join_quizz(request,room_code)
         return Response({'success':'success'})
 
+
+class QuizzLogCreateView(APIView):
+    queryset=QuizzLog.objects.all()
+    # serializer_class=QuizzLogSerializer
+
+    def post(self,request):
+        ser_data= QuizzLogSerializer(data=self.request.data)
+        if ser_data.is_valid():
+            ser_data.save()
+            return Response("success")
+    
+        return Response(ser_data.error)
+
+    def get(self,request):
+        rdata=QuizzLogSerializer(self.queryset)
+        return Response(rdata.data)
+        

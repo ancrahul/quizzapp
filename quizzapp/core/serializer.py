@@ -2,6 +2,7 @@ from .models import *
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import make_password
+from .quizz_manager import *
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
@@ -22,9 +23,20 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 
+
+class UserQuizzScoreSerializer(serializers.ModelSerializer):
+    user=serializers.PrimaryKeyRelatedField(source='user.id',queryset=CustomUser.objects.all())
+    quizzlog=serializers.PrimaryKeyRelatedField(source="quizzlog.id",queryset=QuizzLog.objects.all())
+    class Meta:
+        model =UserQuizzScore
+        fields=["user","score","quizzlog"]
+
+
+
 def checkempty(value):  ####validator#######
     if value=="":
         raise serializers.ValidationError('This field is required.')
+
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -46,7 +58,21 @@ class QuestionCategorySerializer(serializers.Serializer):
 class QuestionSubCategorySerializer(serializers.Serializer):
     sub_category = serializers.CharField()
 
-class JoinOrCreateGameSerializer(serializers.ModelSerializer):
+
+
+
+
+
+class QuizzLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuizzLog
-        fields = ["id","room_code","user","sub_category","winner","active_flag","created_at","started_at","completed_at"]
+        fields = ["id","room_code","sub_category","winner","active_flag","created_at","started_at","completed_at"]
+
+
+
+
+
+
+
+
+
