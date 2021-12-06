@@ -18,11 +18,11 @@ urlpatterns = [
     path('api/login/',LoginTokenObtainPairView.as_view(),name='login'),
     path('api/registration/',CustomUserCreate.as_view(),name='registration'),
     path('api/refreshtoken/',TokenRefreshView.as_view()),
-    path('api/verifytoken/',TokenVerifyView.as_view())
-]
+    path('api/verifytoken/',TokenVerifyView.as_view()),
 
-    path("test/",test),
-    path("test2/",test2,name="test2"),
+    #
+    # path("test/",test),
+    # path("test2/",test2,name="test2"),
     path('live_game',get_live_quizz_api),
     path('create_game',create_quizz_api),
     path('join_quiz',join_quizz_api)

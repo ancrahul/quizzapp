@@ -1,6 +1,11 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractUser
+from django.forms import ModelForm
 from django.db.models.signals import post_save
+
+
+class CustomUser(AbstractUser):
+    total_score = models.IntegerField(null=True,default=0)
 
 class UserTotalScore(models.Model):
     user = models.OneToOneField(CustomUser,on_delete=models.CASCADE)
@@ -13,7 +18,7 @@ class UserTotalScore(models.Model):
         if created:
             profile, created = UserTotalScore.objects.get_or_create(user=instance)
 
-    post_save.connect(create_user_score, sender=User)
+    post_save.connect(create_user_score, sender=CustomUser)
 
 
 class QuizzLog(models.Model):
@@ -34,8 +39,7 @@ class UserQuizzScore(models.Model):
 from django.contrib.auth.models import AbstractUser
 
 
-class CustomUser(AbstractUser):
-    total_score = models.IntegerField(null=True,default=0)
+
 
 
 class QuestionModel(models.Model):

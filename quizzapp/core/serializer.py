@@ -1,15 +1,11 @@
 from .models import *
 from rest_framework import serializers
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
         fields="__all__"
         # fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
-
-
-
-
 
 
 
@@ -48,7 +44,7 @@ class QuestionCategorySerializer(serializers.Serializer):
 
 class QuestionSubCategorySerializer(serializers.Serializer):
     sub_category = serializers.CharField()
-        fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+    fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
 
 
 class JoinOrCreateGameSerializer(serializers.ModelSerializer):
