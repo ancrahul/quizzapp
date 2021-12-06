@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'core',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,7 @@ DATABASES = {
     }
 }
 
-AUTH_PROFILE_MODULE = 'core.UserScore'
+# AUTH_PROFILE_MODULE = 'core.UserScore'
 
 
 # Password validation

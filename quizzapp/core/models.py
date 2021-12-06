@@ -31,7 +31,7 @@ class QuizzLog(models.Model):
 class UserQuizzScore(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     quizzlog = models.ForeignKey(QuizzLog,on_delete=models.CASCADE)
-    score = models.IntegerField(default=0)
+    score = models.IntegerField(null = True,default=0)
 
 
 class QuestionModel(models.Model):

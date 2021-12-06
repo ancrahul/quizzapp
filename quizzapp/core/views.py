@@ -1,15 +1,10 @@
-from django.http.response import HttpResponse,JsonResponse
 from rest_framework.response import Response 
-from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView 
 from .models import *
-from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .quizz_manager import *
 from .serializer import *
 from rest_framework.decorators import api_view
-import datetime
 import json
 from django.core.serializers import serialize
 
@@ -43,8 +38,23 @@ def join_quizz_api(request):
         return Response(ser)
 
     if request.method == 'POST':
-        data = request.data
-        room_code = data['room_code']
-        join_quizz(request,room_code)
+        join_quizz(request)
         return Response({'success':'success'})
 
+
+@api_view(['GET','POST'])
+def question(request):
+    if request.method == 'GET':
+        ser = json.loads(serialize('json',get_random_ten_question()))
+        return Response(ser)
+    if request.method == 'POST': 
+        return Response(validate_answer(request))
+
+
+@api_view(['GET','POST'])
+def update_current_score(request):
+    if request.method == 'GET':
+        a = update_current_game_score(request,validate_answer = False)
+        return Response(a)
+    # if request.method == 'POST':
+    #     update_current_game_score(request,True)
