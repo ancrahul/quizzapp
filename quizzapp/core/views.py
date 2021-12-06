@@ -5,6 +5,7 @@ from .models import *
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .question_manager import *
+from .quizz_manager import *
 import uuid
 # import pandas as pd
 from rest_framework.views import APIView
@@ -88,9 +89,11 @@ class QuestionCategoryView(APIView):
 class QuestionSubCategoryView(APIView):
     def get(self,request,catname=None):
         obj=QuestionModel.objects.filter(category=self.kwargs['catname']).values("sub_category").distinct()
-        obj_ser=QuestionSubCategorySerializer(obj,many=True)
+        obj_ser= QuestionSubCategorySerializer(obj,many=True)
+
         subcatlist={"sub_category":[ i['sub_category'] for i in obj_ser.data]}
         return Response(subcatlist)
+
 
 
 
@@ -120,8 +123,7 @@ class LoginTokenObtainPairView(TokenObtainPairView):
 
 
 
-
-
+############################################
 @api_view(['GET'])
 def get_live_quizz_api(request):
     ser = json.loads(serialize('json',get_live_quizz()))

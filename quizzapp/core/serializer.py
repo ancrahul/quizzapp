@@ -1,6 +1,7 @@
 from .models import *
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth.hashers import make_password
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
@@ -16,7 +17,7 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
         token = super(LoginTokenPairSerializer, cls).get_token(user)
         # Add custom claims
         token['username'] = user.username
-        token['score'] = user.total_score
+        token['is_staff'] = user.is_staff
         return token
 
 
@@ -44,8 +45,6 @@ class QuestionCategorySerializer(serializers.Serializer):
 
 class QuestionSubCategorySerializer(serializers.Serializer):
     sub_category = serializers.CharField()
-    fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
-
 
 class JoinOrCreateGameSerializer(serializers.ModelSerializer):
     class Meta:

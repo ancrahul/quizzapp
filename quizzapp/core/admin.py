@@ -30,6 +30,3 @@ class QuizzLogAdmin(admin.ModelAdmin):
 class QuizzUserScoreAdmin(admin.ModelAdmin):
     list_display = ['user','quizzlog','score']
 
-@admin.register(UserTotalScore)
-class UserScoreAdmin(admin.ModelAdmin):
-    list_display = ['score']
