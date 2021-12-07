@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.forms import ModelForm
 from django.db.models.signals import post_save
 from .quizz_manager import room_code_generator
+from django.utils import timezone
 
 
 class CustomUser(AbstractUser):
@@ -23,6 +24,7 @@ class QuizzLog(models.Model):
     def save(self, *args, **kwargs):
         self.room_code = room_code_generator()
         super(QuizzLog, self).save(*args, **kwargs)
+
 
 
 class UserQuizzScore(models.Model):
