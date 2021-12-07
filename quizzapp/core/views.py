@@ -33,7 +33,7 @@ def home(request):
 #######################################
 
 class CustomUserViewSet(ModelViewSet):
-    permission_classes =(IsAdminUser,)
+    permission_classes =(IsAuthenticated,)
     queryset= CustomUser.objects.all()
     serializer_class= CustomUserSerializer
 
@@ -132,7 +132,7 @@ def get_live_quizz_api(request):
 @api_view(['POST'])
 def create_quizz_api(request):
     ser_data = QuizzLogSerializer(data=request.data)
-    print(request.user)
+    # print(request.user)
 
 
     # print(type(ser_data))
@@ -152,9 +152,9 @@ def create_quizz_api(request):
 def join_quizz_api(request):
     if request.method == 'GET':
         obj = QuizzLog.objects.all().filter(active_flag = True)
-        print(obj.values())
+        # print(obj.values())
         serobj = QuizzLogSerializer(obj)
-        print(serobj)
+        # print(serobj)
         return Response(serobj.data)
         # ser = json.loads(serialize('json',get_live_quizz()))
         # return Response(ser)
@@ -170,21 +170,21 @@ def join_quizz_api(request):
 
 class QuizzLogCreateView(APIView):
     queryset=QuizzLog.objects.all()
-    print(queryset.values())
+    # print(queryset.values())
     # serializer_class=QuizzLogSerializer
 
     def post(self,request):
         ser_data= QuizzLogSerializer(data=self.request.data)
         if ser_data.is_valid():
             ser_data.save()
-            print(ser_data)
+            # print(ser_data)
             return Response("success")
     
         return Response(ser_data.error)
 
     def get(self,request):
         rdata=QuizzLogSerializer(self.queryset)
-        print(rdata)
+        # print(rdata)
         return Response(rdata.data)
 
 
@@ -192,17 +192,22 @@ class QuizzLogCreateView(APIView):
 class QuizzLogGameViewSet(ModelViewSet):
     queryset=QuizzLog.objects.all()
     serializer_class=QuizzLogSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'sub_category',"active_flag"]
+
 
     def create(self,request):
         serializer = self.get_serializer(data=request.data)
-        print(request.data['users'])
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)  
-        for i in request.data['users']:
-            ci=CustomUser.objects.get(id=i["user"])
-            qi=QuizzLog.objects.get(id=serializer.data["id"])
-            UserQuizzScore.objects.create(user=ci,quizzlog=qi)
+        headers = self.get_success_headers(serializer.data)
+        qi=QuizzLog.objects.get(id=serializer.data["id"])
+        ci=CustomUser.objects.get(id=request.user.id)
+        UserQuizzScore.objects.create(user=ci,quizzlog=qi)   
+        # for i in request.data['users']:
+        #     ci=CustomUser.objects.get(id=i["user"])
+        #     qi=QuizzLog.objects.get(id=serializer.data["id"])
+        #     UserQuizzScore.objects.create(user=ci,quizzlog=qi)
         return  Response(serializer.data)
 
 

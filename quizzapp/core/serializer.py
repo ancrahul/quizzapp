@@ -63,7 +63,7 @@ class QuizzLogSerializer(serializers.ModelSerializer):
     # user= UserQuizzScoreSerializer()
     class Meta:
         model = QuizzLog
-        fields = ["id","room_code","sub_category","winner","active_flag","created_at","started_at","completed_at","users"]
+        fields = ["id","room_code","category","sub_category","winner","active_flag","created_at","started_at","completed_at","users"]
         # fields="__all__"
 
     def get_users(self, obj):
