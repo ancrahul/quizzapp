@@ -51,8 +51,9 @@ def get_winner(room_code):
     print(winner)
 
 
-def create_quizz(request, sub_category):
+def create_quizz(request):
     quiz_creator = request.user.id
+    sub_category = request.data['sub_category']
     room_code = room_code_generator()
     QuizzLog.objects.create(room_code=room_code, sub_category=sub_category)
     instance = QuizzLog.objects.get(room_code=room_code)
@@ -64,17 +65,16 @@ def get_live_quizz():
     live_quizz = QuizzLog.objects.all().filter(active_flag=True)
     return live_quizz
 
-
-def join_quizz(request, room_code):
-    # 2nd user, started time, room code to join, active_flag=of
-    # get_live_quizz()
+def join_quizz(request):
+    data = request.data
+    room_code = data['room_code']
     quiz_joiner = request.user.id
-    join_time = timezone.now()
+    join_time = timezone.now() 
     instance = QuizzLog.objects.get(room_code=room_code)
     instance.user.add(quiz_joiner)
     instance.started_at = join_time
     instance.active_flag = False
-    instance.save()
+    instance.save() 
 
 
 # ------------------------------------------------------------------------------------------------------
