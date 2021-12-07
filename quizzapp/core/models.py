@@ -12,6 +12,7 @@ class CustomUser(AbstractUser):
 class QuizzLog(models.Model):
     room_code = models.CharField(max_length=20,null=True)
     user = models.ManyToManyField(CustomUser,through= 'UserQuizzScore')
+    category = models.CharField(max_length=200,null=True)
     sub_category = models.CharField(max_length=200,null=True)
     winner = models.CharField(max_length=200,null=True)
     active_flag = models.BooleanField(default=True,null = True)

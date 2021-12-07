@@ -170,17 +170,40 @@ def join_quizz_api(request):
 
 class QuizzLogCreateView(APIView):
     queryset=QuizzLog.objects.all()
+    print(queryset.values())
     # serializer_class=QuizzLogSerializer
 
     def post(self,request):
         ser_data= QuizzLogSerializer(data=self.request.data)
         if ser_data.is_valid():
             ser_data.save()
+            print(ser_data)
             return Response("success")
     
         return Response(ser_data.error)
 
     def get(self,request):
         rdata=QuizzLogSerializer(self.queryset)
+        print(rdata)
         return Response(rdata.data)
+
+
+
+class QuizzLogGameViewSet(ModelViewSet):
+    queryset=QuizzLog.objects.all()
+    serializer_class=QuizzLogSerializer
+
+    def create(self,request):
+        serializer = self.get_serializer(data=request.data)
+        print(request.data['users'])
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)  
+        for i in request.data['users']:
+            ci=CustomUser.objects.get(id=i["user"])
+            qi=QuizzLog.objects.get(id=serializer.data["id"])
+            UserQuizzScore.objects.create(user=ci,quizzlog=qi)
+        return  Response(serializer.data)
+
+
         

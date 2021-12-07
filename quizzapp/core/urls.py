@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 routers=DefaultRouter()
 routers.register("question",QuestionModelViewSet,basename="question")
 routers.register("user",CustomUserViewSet,basename="user")
+routers.register("quizzgame",QuizzLogGameViewSet,basename="quizzgame")
 
 urlpatterns = [
     path("",home),

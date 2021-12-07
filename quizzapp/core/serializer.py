@@ -25,8 +25,6 @@ class LoginTokenPairSerializer(TokenObtainPairSerializer):
 
 
 class UserQuizzScoreSerializer(serializers.ModelSerializer):
-    user=serializers.PrimaryKeyRelatedField(source='user.id',queryset=CustomUser.objects.all())
-    quizzlog=serializers.PrimaryKeyRelatedField(source="quizzlog.id",queryset=QuizzLog.objects.all())
     class Meta:
         model =UserQuizzScore
         fields=["user","score","quizzlog"]
@@ -36,7 +34,6 @@ class UserQuizzScoreSerializer(serializers.ModelSerializer):
 def checkempty(value):  ####validator#######
     if value=="":
         raise serializers.ValidationError('This field is required.')
-
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -61,12 +58,33 @@ class QuestionSubCategorySerializer(serializers.Serializer):
 
 
 
-
-
 class QuizzLogSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
+    # user= UserQuizzScoreSerializer()
     class Meta:
         model = QuizzLog
-        fields = ["id","room_code","sub_category","winner","active_flag","created_at","started_at","completed_at"]
+        fields = ["id","room_code","sub_category","winner","active_flag","created_at","started_at","completed_at","users"]
+        # fields="__all__"
+
+    def get_users(self, obj):
+        # print(obj)
+        "obj is a Member instance. Returns list of dicts"""
+        # return "sasa"
+        qset = UserQuizzScore.objects.filter(quizzlog=obj)
+        return [UserQuizzScoreSerializer(m).data for m in qset]
+
+
+    def create(self, validated_data):
+        print(validated_data)
+        return QuizzLog.objects.create(**validated_data)
+
+    # def update(self, instance, validated_data):
+    #     instance.email = validated_data.get('email', instance.email)
+    #     instance.content = validated_data.get('content', instance.content)
+    #     instance.created = validated_data.get('created', instance.created)
+    #     instance.save()
+    #     return instance
+
 
 
 
