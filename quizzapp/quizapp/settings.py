@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@597d60+xsp#8(n1e^9)@at)&iw0j^0gejhl%euq_@rr6joxg5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'core',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -77,10 +79,16 @@ WSGI_APPLICATION = 'quizapp.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'quizzapp',
+       'USER': 'postgres',
+       'PASSWORD': '1234',
+       'HOST': 'localhost',
+       'PORT': '5432',
     }
 }
+
+# AUTH_PROFILE_MODULE = 'core.UserScore'
 
 
 # Password validation
@@ -125,3 +133,10 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_AUTHENTICATION_CLASS':('rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'PAGE_SIZE': 10
+}
