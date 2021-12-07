@@ -16,25 +16,9 @@ def get_random_ten_question():
     random_id_list = random.sample(list(same_subcategory_ids_queryset),min(len(same_subcategory_ids_queryset), 1))
     random_question_queryset = QuestionModel.objects.filter(id__in = random_id_list)
     return random_question_queryset
-    
-def validate_answer(request):
-    data = request.data
-    qs_id = data['id']
-    answer = data['answer']
-    get_answer_from_db = QuestionModel.objects.filter(id= qs_id).values_list('correct_answer',flat=True)
-    if answer in get_answer_from_db:
-        return True
-    else:
-        return False
 
-def update_total_score():
-    # current score will be zero 
-    # if user give right answer score will be +10
-    # if user give wrong answer score will be -10
-    # if user give no answer score will not change
-    pass
-
-def update_current_game_score(request,validate_answer,room_code):
+def update_current_game_score(request,validate_answer):
+    room_code = request.data['room_code']
     obj = UserQuizzScore.objects.get(quizzlog__room_code = room_code,user = request.user)
     current_score = obj.score
     if validate_answer == True:
@@ -44,6 +28,27 @@ def update_current_game_score(request,validate_answer,room_code):
     obj.score = current_score
     obj.save()
     return "success"
+
+
+def validate_answer(request):
+    data = request.data
+    qs_id = data['id']
+    answer = data['answer']
+    get_answer_from_db = QuestionModel.objects.filter(id= qs_id).values_list('correct_answer',flat=True)
+    if answer in get_answer_from_db:
+        update_current_game_score(request,validate_answer = True)
+    else:
+        update_current_game_score(request,validate_answer = False)
+
+
+def update_total_score(request):
+    curret_user_score_list = UserQuizzScore.objects.filter(user=request.user).values_list('score', flat=True)
+    current_score = 0
+    for i in curret_user_score_list:
+        current_score += i
+    instance  = UserTotalScore.objects.filter(user = request.user).update(score=current_score)
+    return "success"
+    
 
 def get_current_game_score(request,room_code):
     user_quiz_score = UserQuizzScore.objects.get(quizzlog__room_code=room_code, user=request.user)
@@ -68,8 +73,7 @@ def get_live_quizz():
     return live_quizz
 
 def join_quizz(request):
-    data = request.data
-    room_code = data['room_code']
+    room_code = request.data['room_code']
     quiz_joiner = request.user.id
     join_time = timezone.now() 
     instance = QuizzLog.objects.get(room_code=room_code)
@@ -77,7 +81,18 @@ def join_quizz(request):
     instance.started_at = join_time
     instance.active_flag = False
     instance.save()
-# ------------------------------------------------------------------------------------------------------
+
+def determine_winner(request):
+    data = request.data['room_code']
+    obj = UserQuizzScore.objects.filter(quizzlog__room_code = data).values_list('score',flat=True)
+    winner_score = max(obj)
+    winner_obj = UserQuizzScore.objects.get(quizzlog__room_code = data,score = winner_score)
+    winner = winner_obj.user.username
+    winner_score = winner_obj.score
+    winner_dict = {'winner':winner,'winner_score':winner_score}
+    # print(user)
+    return winner_dict
+
 
 def get_distinct_subcategory():
     distinct_subcategory = QuestionModel.objects.all().values_list('sub_category',flat=True).distinct()

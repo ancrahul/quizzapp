@@ -17,9 +17,9 @@ class QuizzLogAdmin(admin.ModelAdmin):
 
 
 @admin.register(UserQuizzScore)
-class QuizzUserScoreAdmin(admin.ModelAdmin):
+class UserQuizzScoreAdmin(admin.ModelAdmin):
     list_display = ['user','quizzlog','score']
 
 @admin.register(UserTotalScore)
 class UserScoreAdmin(admin.ModelAdmin):
-    list_display = ['score']
+    list_display = ['user','score']

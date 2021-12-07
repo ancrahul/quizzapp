@@ -30,10 +30,6 @@ def create_quizz_api(request):
 @api_view(['GET','POST'])
 def join_quizz_api(request):
     if request.method == 'GET':
-        # obj = QuizzLog.objects.all().filter(active_flag = True)
-        # serobj = JoinOrCreateGameSerializer(obj)
-        # print(serobj)
-        # return Response(serobj.data)
         ser = json.loads(serialize('json',get_live_quizz()))
         return Response(ser)
 
@@ -54,7 +50,17 @@ def question(request):
 @api_view(['GET','POST'])
 def update_current_score(request):
     if request.method == 'GET':
-        a = update_current_game_score(request,validate_answer = False)
+        a = update_current_game_score(request,validate_answer = True)
         return Response(a)
     # if request.method == 'POST':
     #     update_current_game_score(request,True)
+
+@api_view(['POST'])
+def update_total_score_view(request):
+    data = update_total_score(request)
+    return Response(data)
+
+@api_view(['POST'])
+def determine_winner_view(request):
+    data = determine_winner(request)
+    return Response(data)
