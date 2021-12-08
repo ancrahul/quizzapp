@@ -33,7 +33,7 @@ def home(request):
 #######################################
 
 class CustomUserViewSet(ModelViewSet):
-    permission_classes =(IsAuthenticated,)
+    # permission_classes =(IsAuthenticated,)    
     queryset= CustomUser.objects.all()
     serializer_class= CustomUserSerializer
 
@@ -110,9 +110,6 @@ class QuestionUploadView(APIView):
         return Response(resp)
 
 
-
-
-
 ##########################
 #Quizz
 ##########################
@@ -127,15 +124,19 @@ class QuizzLogGameViewSet(ModelViewSet):
     def create(self,request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        serializer.save(room_code=room_code_generator())
         headers = self.get_success_headers(serializer.data)
         qi=QuizzLog.objects.get(id=serializer.data["id"])
         ci=CustomUser.objects.get(id=request.user.id)
         UserQuizzScore.objects.create(user=ci,quizzlog=qi)
-        return  Response(serializer.data)
+        return  Response(serializer.data)   
 
-    def join_quizz(self,request):
-        pass
+    @action(detail=False, methods=['PATCH'], name='joinquizz')
+    def joinquizz(self,request):
+        print(self.request.data['room_code'])
+        obj=QuizzLog.objects.get(room_code=self.request.data['room_code'])
+        join_quizz(self.request,obj)
+        return Response({"status":f"{self.request.user} joined"})
 
 
 class UserQuizzScoreViewSet(ModelViewSet):
@@ -143,11 +144,6 @@ class UserQuizzScoreViewSet(ModelViewSet):
     serializer_class = UserQuizzScoreSerializer
 
         
-
-    
-
-
-
 
 
 #######################################
@@ -164,35 +160,35 @@ class LoginTokenObtainPairView(TokenObtainPairView):
 
 
 
-@api_view(['GET'])
-def get_live_quizz_api(request):
-    ser = json.loads(serialize('json',get_live_quizz()))
-    return Response(ser)
+# @api_view(['GET'])
+# def get_live_quizz_api(request):
+#     ser = json.loads(serialize('json',get_live_quizz()))
+#     return Response(ser)
 
-@api_view(['POST'])
-def create_quizz_api(request):
-    ser_data = QuizzLogSerializer(data=request.data)
-    if ser_data.is_valid():
-        ser_data.user.add(request.user.id)
-        ser_data.save()
+# @api_view(['POST'])
+# def create_quizz_api(request):
+#     ser_data = QuizzLogSerializer(data=request.data)
+#     if ser_data.is_valid():
+#         ser_data.user.add(request.user.id)
+#         ser_data.save()
         
-        return Response({'msg': 'Game room created'})
-    return Response(ser_data.errors)
+#         return Response({'msg': 'Game room created'})
+#     return Response(ser_data.errors)
 
 
 
-@api_view(['GET','POST'])
-def join_quizz_api(request):
-    if request.method == 'GET':
-        obj = QuizzLog.objects.all().filter(active_flag = True)
-        serobj = QuizzLogSerializer(obj)
-        return Response(serobj.data)
+# @api_view(['GET','POST'])
+# def join_quizz_api(request):
+#     if request.method == 'GET':
+#         obj = QuizzLog.objects.all().filter(active_flag = True)
+#         serobj = QuizzLogSerializer(obj)
+#         return Response(serobj.data)
 
-    if request.method == 'POST':
-        data = request.data
-        room_code = data['room_code']
-        join_quizz(request,room_code)
-        return Response({'success':'success'})
+#     if request.method == 'POST':
+#         data = request.data
+#         room_code = data['room_code']
+#         join_quizz(request,room_code)
+#         return Response({'success':'success'})
 
 ################################################################################
 

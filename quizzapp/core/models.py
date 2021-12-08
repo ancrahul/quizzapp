@@ -19,11 +19,7 @@ class QuizzLog(models.Model):
     active_flag = models.BooleanField(default=True,null = True)
     created_at = models.DateTimeField(auto_now_add=True)
     started_at = models.DateTimeField(null = True)
-    completed_at = models.DateTimeField(auto_now=True,null = True)
-
-    def save(self, *args, **kwargs):
-        self.room_code = room_code_generator()
-        super(QuizzLog, self).save(*args, **kwargs)
+    completed_at = models.DateTimeField(null = True)
 
 
 

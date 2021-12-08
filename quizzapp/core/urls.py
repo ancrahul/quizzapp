@@ -22,7 +22,7 @@ urlpatterns = [
     path('api/verifytoken/',TokenVerifyView.as_view()),
 
 
-    path('live_quizz',get_live_quizz_api),
-    path('create_quizz',create_quizz_api),
-    path('join_quizz',join_quizz_api)
+    # path('live_quizz',get_live_quizz_api),
+    # path('create_quizz',create_quizz_api),
+    # path('join_quizz',join_quizz_api)
 ]
