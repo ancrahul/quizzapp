@@ -101,7 +101,7 @@ class QuestionUploadView(APIView):
         question_objects=QuestionModel.objects.all()
         serialized_question=QuestionSerializer(question_objects,many=True)
         df=pd.DataFrame(serialized_question.data)
-        df.to_excel(f"question_exel/{uuid.uuid4}.xls",encoding="UTF-8", engine='openpyxl', index=False)
+        df.to_excel(f"question_exel/{uuid.uuid4().hex}.xls",encoding="UTF-8", engine='openpyxl', index=False)
         return Response("{data: true}")
 
     def post(self,request):
@@ -140,7 +140,7 @@ class QuizzLogGameViewSet(ModelViewSet):
 
 class UserQuizzScoreViewSet(ModelViewSet):
     queryset = UserQuizzScore.objects.all()
-    serializer_class =UserQuizzScoreSerializer
+    serializer_class = UserQuizzScoreSerializer
 
         
 
