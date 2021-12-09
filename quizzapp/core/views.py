@@ -143,8 +143,12 @@ class UserQuizzScoreViewSet(ModelViewSet):
 
 
 class LivegamelistViewSet(ModelViewSet):
+
     queryset = QuizzLog.objects.filter(active_flag=True)
     serializer_class = LivegameListSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category', 'sub_category',"active_flag"]
+
 
         
 

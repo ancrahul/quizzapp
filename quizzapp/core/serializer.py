@@ -3,6 +3,9 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import make_password
 from .quizz_manager import *
+
+############ Question Realted Serializers #############
+
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
@@ -10,17 +13,11 @@ class QuestionSerializer(serializers.ModelSerializer):
         # fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
 
 
+class QuestionCategorySerializer(serializers.Serializer):
+    category = serializers.CharField()
 
-class LoginTokenPairSerializer(TokenObtainPairSerializer):
-    ### Inserting Addition of user info into token  ####
-    @classmethod
-    def get_token(cls, user):
-        token = super(LoginTokenPairSerializer, cls).get_token(user)
-        # Add custom claims
-        token['username'] = user.username
-        token['is_staff'] = user.is_staff
-        return token
-
+class QuestionSubCategorySerializer(serializers.Serializer):
+    sub_category = serializers.CharField()
 
 
 
@@ -30,6 +27,8 @@ class UserQuizzScoreSerializer(serializers.ModelSerializer):
         fields=["user","score","quizzlog"]
 
 
+
+############ Accoounts Realted Serializers #############
 
 def checkempty(value):  ####validator#######
     if value=="":
@@ -49,41 +48,37 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 
-class QuestionCategorySerializer(serializers.Serializer):
-    category = serializers.CharField()
+class LoginTokenPairSerializer(TokenObtainPairSerializer):
+    ### Inserting Addition of user info into token  ####
+    @classmethod
+    def get_token(cls, user):
+        token = super(LoginTokenPairSerializer, cls).get_token(user)
+        # Add custom claims
+        token['username'] = user.username
+        token['is_staff'] = user.is_staff
+        return token
 
-class QuestionSubCategorySerializer(serializers.Serializer):
-    sub_category = serializers.CharField()
 
 
 
+
+####### Quizz Related Serializer ##########
 
 class QuizzLogSerializer(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
-    # user= UserQuizzScoreSerializer()
     class Meta:
         model = QuizzLog
         fields = ["id","room_code","category","sub_category","winner","active_flag","created_at","started_at","completed_at","users"]
         # fields="__all__"
 
     def get_users(self, obj):
-        # print(obj)
-        "obj is a Member instance. Returns list of dicts"""
-        # return "sasa"
+        """obj is a Member instance. Returns list of dicts"""
         qset = UserQuizzScore.objects.filter(quizzlog=obj)
         return [UserQuizzScoreSerializer(m).data for m in qset]
 
-
     def create(self, validated_data):
-        print(validated_data)
         return QuizzLog.objects.create(**validated_data)
 
-    # def update(self, instance, validated_data):
-    #     instance.email = validated_data.get('email', instance.email)
-    #     instance.content = validated_data.get('content', instance.content)
-    #     instance.created = validated_data.get('created', instance.created)
-    #     instance.save()
-    #     return instance
 
 
 
