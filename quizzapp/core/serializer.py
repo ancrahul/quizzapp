@@ -87,6 +87,17 @@ class QuizzLogSerializer(serializers.ModelSerializer):
 
 
 
+class LivegameListSerializer(serializers.ModelSerializer):
+    opponant=serializers.SerializerMethodField()
+    class Meta:
+        model = QuizzLog
+        fields =["room_code","opponant","sub_category"]
+
+    def get_opponant(self,obj):
+        return list(obj.user.values())[0]['username']
+
+
+
 
 
 

@@ -10,6 +10,7 @@ routers=DefaultRouter()
 routers.register("question",QuestionModelViewSet,basename="question")
 routers.register("user",CustomUserViewSet,basename="user")
 routers.register("quizzgame",QuizzLogGameViewSet,basename="quizzgame")
+routers.register("livegame",LivegamelistViewSet,basename="livegame")
 
 urlpatterns = [
     path("",home),

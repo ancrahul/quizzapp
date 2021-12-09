@@ -7,7 +7,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .question_manager import *
 from .quizz_manager import *
 import uuid
-# import pandas as pd
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
@@ -77,19 +76,18 @@ class QuestionModelViewSet(ModelViewSet):
 
 
 
-class QuestionCategoryView(APIView):
-    def get(self,request):
-        category_obj=QuestionModel.objects.values("category").distinct()
-        category_obj_ser=Qcatserializer(category_obj,many=True)
-        catlist={"category":[ i['category'] for i in category_obj_ser.data]}
-        return Response(catlist)
+# class QuestionCategoryView(APIView):
+#     def get(self,request):
+#         category_obj=QuestionModel.objects.values("category").distinct()
+#         category_obj_ser=Qcatserializer(category_obj,many=True)
+#         catlist={"category":[ i['category'] for i in category_obj_ser.data]}
+#         return Response(catlist)
 
 
 class QuestionSubCategoryView(APIView):
     def get(self,request,catname=None):
         obj=QuestionModel.objects.filter(category=self.kwargs['catname']).values("sub_category").distinct()
         obj_ser= QuestionSubCategorySerializer(obj,many=True)
-
         subcatlist={"sub_category":[ i['sub_category'] for i in obj_ser.data]}
         return Response(subcatlist)
 
@@ -142,6 +140,11 @@ class QuizzLogGameViewSet(ModelViewSet):
 class UserQuizzScoreViewSet(ModelViewSet):
     queryset = UserQuizzScore.objects.all()
     serializer_class = UserQuizzScoreSerializer
+
+
+class LivegamelistViewSet(ModelViewSet):
+    queryset = QuizzLog.objects.filter(active_flag=True)
+    serializer_class = LivegameListSerializer
 
         
 
