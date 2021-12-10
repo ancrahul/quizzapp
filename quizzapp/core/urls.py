@@ -11,6 +11,7 @@ routers.register("question",QuestionModelViewSet,basename="question")
 routers.register("user",CustomUserViewSet,basename="user")
 routers.register("quizzgame",QuizzLogGameViewSet,basename="quizzgame")
 routers.register("livegame",LivegamelistViewSet,basename="livegame")
+routers.register("quizzquestion",QuizzQuestionView,basename="quizz_question")
 
 urlpatterns = [
     path("",home),

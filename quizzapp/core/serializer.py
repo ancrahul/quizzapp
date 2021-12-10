@@ -4,13 +4,25 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth.hashers import make_password
 from .quizz_manager import *
 
+
+
+
+
 ############ Question Realted Serializers #############
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionModel
-        fields="__all__"
-        # fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+        # fields="__all__"
+        fields=["id","img_question","question","option1","option2","option3","option4","correct_answer","category","sub_category"]
+    # correct_answer = fields.CharField(permission_classes=(IsAuthenticated(), )) 
+
+
+class QuizzQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuestionModel
+        # fields="__all__"
+        fields=["id","img_question","question","option1","option2","option3","option4","category","sub_category"]
 
 
 class QuestionCategorySerializer(serializers.Serializer):
@@ -89,6 +101,7 @@ class LivegameListSerializer(serializers.ModelSerializer):
         fields =["room_code","opponant","sub_category"]
 
     def get_opponant(self,obj):
+        print(request.user)
         print("\n>>>>>>>>>>>",list(obj.user.values()))
         return list(obj.user.values())[0]['username']
 

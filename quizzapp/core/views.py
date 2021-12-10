@@ -76,6 +76,12 @@ class QuestionModelViewSet(ModelViewSet):
         return Response(catlist)
 
 
+class QuizzQuestionView(ModelViewSet):
+    queryset=QuestionModel.objects.all()
+    serializer_class= QuizzQuestionSerializer
+    http_method_names = ['get']
+
+
 
 # class QuestionCategoryView(APIView):
 #     def get(self,request):
