@@ -5,7 +5,8 @@ from .models import *
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .question_manager import *
-from .quizz_manager import *
+# from .quizz_manager import *
+# from .quizzmanager import *
 import uuid
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,6 +20,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,
 from rest_framework.decorators import action
 
 
+# {"question_id":4,"answer":"asd"}
 
 ##########  Test Code   ###########
 def home(request):
@@ -138,9 +140,7 @@ class QuizzLogGameViewSet(ModelViewSet):
 
     @action(detail=False, methods=['PATCH'], name='joinquizz')
     def joinquizz(self,request):
-        print(self.request.data['room_code'])
-        obj=QuizzLog.objects.get(room_code=self.request.data['room_code'])
-        join_quizz(self.request,obj)
+        join_quizz(self.request)
         return Response({"status":f"{self.request.user} joined"})
 
 
@@ -159,6 +159,22 @@ class QuizzQuestionListView(APIView):
     def post(self,request):
         self.quizz_questions_id_list=get_random_questions_id(subcategory=self.request.data["sub_category"])
         return Response({"Question":self.quizz_questions_id_list})
+
+
+
+class SubmitAnswerView(APIView):
+    def post(self,request):
+        self.resp= validate_answer(self.request)
+
+        return Response({"Status": self.resp})
+
+
+class TestView(APIView):
+    def post(self,request):
+        self.resp=update_total_score(self.request)
+        return Response({"Status": self.resp})
+
+
         
         
 
