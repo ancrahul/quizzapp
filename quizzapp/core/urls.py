@@ -16,6 +16,7 @@ urlpatterns = [
     path("",home),
     path("api/",include(routers.urls)),
     path("api/qupload/",QuestionUploadView.as_view(),name='question_upload'),
+    path("api/getquizzquestion",QuizzQuestionListView.as_view(),name="get_quizz_question"),
     path("api/question/category/<slug:catname>/subcategory",QuestionSubCategoryView.as_view(),name='question_category'),
     path('api/login/',LoginTokenObtainPairView.as_view(),name='login'),
     path('api/registration/',CustomUserCreate.as_view(),name='registration'),

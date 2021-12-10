@@ -89,6 +89,7 @@ class LivegameListSerializer(serializers.ModelSerializer):
         fields =["room_code","opponant","sub_category"]
 
     def get_opponant(self,obj):
+        print("\n>>>>>>>>>>>",list(obj.user.values()))
         return list(obj.user.values())[0]['username']
 
 

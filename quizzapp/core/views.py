@@ -22,6 +22,7 @@ from rest_framework.decorators import action
 
 ##########  Test Code   ###########
 def home(request):
+    print(get_random_questions_id(subcategory="Indian History"))
     f=QuestionUploadForm()
     return render(request,"home.html",{"f":f})
     # question_set=get_random_questions("Indian History",5)
@@ -116,7 +117,7 @@ class QuizzLogGameViewSet(ModelViewSet):
     queryset=QuizzLog.objects.all()
     serializer_class=QuizzLogSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category', 'sub_category',"active_flag"]
+    filterset_fields = ['category', 'sub_category',"active_flag","room_code"]
 
 
     def create(self,request):
@@ -143,11 +144,17 @@ class UserQuizzScoreViewSet(ModelViewSet):
 
 
 class LivegamelistViewSet(ModelViewSet):
-
     queryset = QuizzLog.objects.filter(active_flag=True)
     serializer_class = LivegameListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['category', 'sub_category',"active_flag"]
+
+class QuizzQuestionListView(APIView):
+    def post(self,request):
+        self.quizz_questions_id_list=get_random_questions_id(subcategory=self.request.data["sub_category"])
+        return Response({"Question":self.quizz_questions_id_list})
+        
+        
 
 
         

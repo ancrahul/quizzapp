@@ -10,6 +10,13 @@ def get_random_questions(subcategory,numbers=10):
     return count[0:numbers]
 
 
+def get_random_questions_id(subcategory,numbers=10):
+    count=list(QuestionModel.objects.filter(sub_category=subcategory).values_list("id",flat=True))
+    random.shuffle(count)
+    return count[0:numbers]
+
+
+
 
 def save_exel_to_question_model(question_upload_object):
     df = pd.read_excel(f"{settings.BASE_DIR}/{question_upload_object.exel_file_upload}",index_col=0)
