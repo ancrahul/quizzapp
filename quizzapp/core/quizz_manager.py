@@ -46,7 +46,7 @@ def update_current_game_score(request,validate_answer):
         current_score = current_score - 10
     obj.score = current_score
     obj.save()
-    return "success"
+    return current_score
 
 
 def validate_answer(request):
@@ -54,8 +54,8 @@ def validate_answer(request):
     qs_id = data['question_id']
     answer = data['answer']
     get_answer_from_db = QuestionModel.objects.get(id= qs_id).correct_answer
-    update_current_game_score(request,validate_answer = (answer == get_answer_from_db))
-    return "success"
+    resp_updated_score = update_current_game_score(request,validate_answer = (answer == get_answer_from_db))
+    return resp_updated_score
 
 
 

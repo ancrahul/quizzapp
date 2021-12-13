@@ -165,7 +165,13 @@ class QuizzQuestionListView(APIView):
 class SubmitAnswerView(APIView):
     def post(self,request):
         self.resp= validate_answer(self.request)
+        return Response({"Status":"success","current_score":self.resp})
 
+
+
+class SubmitQuizzView(APIView):
+    def post(self,request):
+        self.resp= determine_winner(self.request)
         return Response({"Status": self.resp})
 
 
