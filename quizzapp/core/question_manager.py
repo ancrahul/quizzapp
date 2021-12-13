@@ -10,9 +10,9 @@ def get_random_questions(subcategory,numbers=10):
     return count[0:numbers]
 
 
-def get_random_questions_id(subcategory,numbers=10):
+def get_random_questions_id(subcategory,room_code,numbers=10):
     count=list(QuestionModel.objects.filter(sub_category=subcategory).values_list("id",flat=True))
-    random.shuffle(count)
+    random.Random(room_code).shuffle(count)
     return count[0:numbers]
 
 

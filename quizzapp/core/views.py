@@ -24,7 +24,7 @@ from rest_framework.decorators import action
 
 ##########  Test Code   ###########
 def home(request):
-    print(get_random_questions_id(subcategory="Indian History"))
+    # print(get_random_questions_id(subcategory="Indian History"))
     f=QuestionUploadForm()
     return render(request,"home.html",{"f":f})
     # question_set=get_random_questions("Indian History",5)
@@ -157,7 +157,7 @@ class LivegamelistViewSet(ModelViewSet):
 
 class QuizzQuestionListView(APIView):
     def post(self,request):
-        self.quizz_questions_id_list=get_random_questions_id(subcategory=self.request.data["sub_category"])
+        self.quizz_questions_id_list=get_random_questions_id(subcategory=self.request.data["sub_category"],room_code=self.request.data["room_code"])
         return Response({"Question":self.quizz_questions_id_list})
 
 

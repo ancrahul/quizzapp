@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django_filters',
     'core',
     'corsheaders',
-    'rest_framework_serializer_field_permissions',
 ]
 
 MIDDLEWARE = [
