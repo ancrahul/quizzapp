@@ -66,6 +66,7 @@ def determine_winner(request):
     if obj[0] == obj[1]:
         completed_at_obj.completed_at = timezone.now()
         winner_dict = {'winner':"Tie Game"}
+        update_total_score(request)
         return winner_dict
     else:    
         winner_score = max(obj)
@@ -76,4 +77,5 @@ def determine_winner(request):
         winner_score = winner_obj.score
         completed_at_obj.completed_at = timezone.now()
         winner_dict = {'winner':winner,'winner_score':winner_score}
+        update_total_score(request)
         return winner_dict

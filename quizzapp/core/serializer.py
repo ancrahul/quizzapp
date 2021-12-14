@@ -51,8 +51,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     email=serializers.EmailField(max_length=254,validators=[checkempty])
     class Meta:
         model = CustomUser
-        fields=["username","email","password"]
-
+        fields=["username","email","password","total_score"]
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
         return super(CustomUserSerializer, self).create(validated_data)

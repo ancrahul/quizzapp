@@ -26,9 +26,4 @@ urlpatterns = [
     path('api/registration/',CustomUserCreate.as_view(),name='registration'),
     path('api/refreshtoken/',TokenRefreshView.as_view()),
     path('api/verifytoken/',TokenVerifyView.as_view()),
-
-
-    # path('live_quizz',get_live_quizz_api),
-    # path('create_quizz',create_quizz_api),
-    # path('join_quizz',join_quizz_api)
 ]
